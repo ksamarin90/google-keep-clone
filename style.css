@@ -38,6 +38,7 @@ header {
   font-size: 2rem;
   padding-top: 4px;
   padding-left: 4px;
+  cursor: default;
 }
 
 #form-container {
@@ -62,6 +63,10 @@ header {
   transition-timing-function: ease-in;
 }
 
+.form-open {
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
+}
+
 #note-title {
   display: none;
   width: calc(100% - 10px);
@@ -71,7 +76,7 @@ header {
   font-size: 1rem;
   font-weight: 500;
   line-height: 1.5rem;
-  border: 0;
+  border: none;
 }
 
 #note-text {
@@ -86,6 +91,10 @@ header {
   border: 0;
   overflow: hidden;
   position: relative;
+}
+
+input:focus {
+  outline: none;
 }
 
 #form-buttons {
