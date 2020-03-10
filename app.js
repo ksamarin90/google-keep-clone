@@ -1,6 +1,6 @@
 class App {
   constructor() {
-    this.notes = [];
+    this.notes = JSON.parse(localStorage.getItem('notes')) || [];
     this.title = '';
     this.text = '';
     this.id = '';
@@ -18,6 +18,7 @@ class App {
     this.$modalCloseButton = document.querySelector('.modal-close-button');
     this.$colorTooltip = document.querySelector('#color-tooltip');
 
+    this.render();
     this.addEventListeners();
   }
 
@@ -26,6 +27,7 @@ class App {
       this.handleFormClick(event);
       this.selectNote(event);
       this.openModal(event);
+      this.deleteNote(event);
     });
 
     document.body.addEventListener('mouseover', event => {
@@ -104,6 +106,8 @@ class App {
   }
 
   openModal(event) {
+    if (event.target.matches('.toolbar-delete')) return;
+
     if (event.target.closest('.note')) {
       this.$modal.classList.toggle('open-modal');
       this.$modalTitle.value = this.title;
@@ -139,7 +143,8 @@ class App {
       id: this.notes.length > 0 ? this.notes[this.notes.length - 1].id + 1 : 1
     };
     this.notes = [...this.notes, newNote];
-    this.displayNotes();
+    this.render();
+    this.closeForm();
   }
 
   editNote() {
@@ -149,14 +154,14 @@ class App {
     this.notes = this.notes.map(note => 
       note.id === Number(this.id) ? { ...note, title, text } : note
     );
-    this.displayNotes();
+    this.render();
   }
 
   editNoteColor(color) {
     this.notes = this.notes.map(note => 
       note.id === Number(this.id) ? { ...note, color } : note
     );
-    this.displayNotes();
+    this.render();
   }
 
   selectNote(event) {
@@ -166,7 +171,23 @@ class App {
     this.title = $noteTitle.innerText;
     this.text = $noteText.innerText;
     this.id = $selectedNote.dataset.id;
-    
+  }
+
+  deleteNote(event) {
+    event.stopPropagation();
+    if (!event.target.matches('.toolbar-delete')) return;
+    const id = event.target.dataset.id;
+    this.notes = this.notes.filter(note => note.id !== Number(id));
+    this.render();
+  }
+
+  render() {
+    this.saveNotes();
+    this.displayNotes();  
+  }
+
+  saveNotes() {
+    localStorage.setItem('notes', JSON.stringify(this.notes))  
   }
 
   displayNotes() {
@@ -181,7 +202,7 @@ class App {
         <div class="toolbar-container">
           <div class="toolbar">
             <img class="toolbar-color" data-id=${note.id} src="https://icon.now.sh/palette">
-            <img class="toolbar-delete" src="https://icon.now.sh/delete">
+            <img class="toolbar-delete" data-id=${note.id} src="https://icon.now.sh/delete">
           </div>
         </div>
       </div>
