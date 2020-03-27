@@ -2,4 +2,4 @@
 Clone of google keep service (desktop only).
 
 
-Go to http://brief-ant.surge.sh/ and feel free to make your own notes!
+Go to https://ksamarin90.github.io/google-keep-clone/ and feel free to make your own notes!
